@@ -58,11 +58,12 @@ import isaaclab_tasks
 from isaaclab_tasks.utils import get_checkpoint_path 
 from isaaclab_tasks.utils.hydra import hydra_task_config
 
-
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 torch.backends.cudnn.deterministic = False
 torch.backends.cudnn.benchmark = False
+
+from robot_sim.utils.logger import Logger
 
 @hydra_task_config(cli_args.task, '')
 def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agent_cfg=None):
@@ -93,10 +94,12 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         # agent_cfg.seed = seed
 
     ### specify directory for logging experiments
-    log_root_path = os.path.join(cli_args.output_dir, "logs", "rsl_rl")
-    log_dir = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    log_dir = os.path.join(log_root_path, log_dir)
-    print(f"[INFO] Logging experiment in directory: {log_dir}")
+    log_root_path = os.path.join(cli_args.output_dir, datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+    log_dir = os.path.join(log_root_path, 'logs')
+    logger = Logger(name='tmp', 
+                    log_dir=log_dir, 
+                    log_file_level="DEBUG")
+    logger.info(f"[INFO] Logging experiment in directory: {log_dir}")
 
     ### create isaac environment ------------------------------------------------------------------
     env = gym.make(cli_args.task, cfg=env_cfg, render_mode="rgb_array" if cli_args.video else None)
@@ -112,12 +115,12 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     # wrap for video recording
     if cli_args.video:
         video_kwargs = {
-            "video_folder": os.path.join(log_dir, "videos", "train"),
+            "video_folder": os.path.join(log_root_path, "videos", "train"),
             "step_trigger": lambda step: step % cli_args.video_interval == 0,
             "video_length": cli_args.video_length,
             "disable_logger": True,
         }
-        print(f"[INFO] Recording videos during training:")
+        logger.info(f"[INFO] Recording videos during training:")
         print_dict(video_kwargs, nesting=4)
         env = gym.wrappers.RecordVideo(env, **video_kwargs)
 
@@ -148,6 +151,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
 
 
 if __name__ == '__main__':
+
     main()
     
     simulation_app.close()
