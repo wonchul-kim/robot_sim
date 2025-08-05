@@ -4,7 +4,6 @@ def get_args():
     parser = argparse.ArgumentParser(description='')
     parser.add_argument("--output_dir", default='/HDD/etc/outputs/isaac', type=str)
     parser.add_argument("--device", default='cuda:1', type=str)
-    parser.add_argument("--gui", action="store_true", default=False)
     parser.add_argument("--video", action="store_true", default=True, help="Record videos during training")
     parser.add_argument("--video_length", type=int, default=200, help="Length of the recorded video (in steps).")
     parser.add_argument("--video_interval", type=int, default=20000, help="Interval between video recordings (in steps).")
@@ -34,8 +33,6 @@ def launch_isaac_sim():
                         cpu=False, verbose=False, info=False, experience='', 
                         rendering_mode=None, kit_args='')
     '''
-    if cli_args.gui:
-        cli_args.headless = True
     cli_args.headless = True
     if cli_args.video:
         cli_args.enable_cameras = True
@@ -46,7 +43,7 @@ def launch_isaac_sim():
     logger = Logger(name='tmp', 
                     log_dir=cli_args.log_dir, 
                     log_file_level="DEBUG")
-    logger.info(f"Logging experiment in directory: {cli_args.log_dir}")
+    logger.info(f"[INFO] Logging experiment in directory: {cli_args.log_dir}")
     
     logger.info(f"cli_args: {cli_args}")
 
