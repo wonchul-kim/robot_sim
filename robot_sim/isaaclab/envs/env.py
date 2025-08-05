@@ -10,7 +10,7 @@ def get_args():
     parser.add_argument("--video_interval", type=int, default=20000, help="Interval between video recordings (in steps).")
     parser.add_argument("--num_envs", type=int, default=2, help="Number of environments to simulate.")
     parser.add_argument("--task", type=str, default='Isaac-Reach-Franka-v0', help="Name of the task.")
-    parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
+    parser.add_argument("--seed", type=int, default=42, help="Seed used for the environment")
     parser.add_argument("--max_iterations", type=int, default=1e6, help="RL Policy training iterations.")
     parser.add_argument(
         "--distributed", action="store_true", default=False, help="Run training with multiple GPUs or nodes."
@@ -57,16 +57,6 @@ def launch_isaac_sim():
     return app_launcher, simulation_app, cli_args, logger
 
 
-
-def register_task_to_hydra(task_name: str):
-
-    from isaaclab_tasks.utils.parse_cfg import load_cfg_from_registry
-    from isaaclab.envs.utils.spaces import replace_env_cfg_spaces_with_strings
-    
-    env_cfg = load_cfg_from_registry(task_name, "env_cfg_entry_point")
-    env_cfg = replace_env_cfg_spaces_with_strings(env_cfg)
-    return env_cfg
-
 def get_env():
     
     app_launcher, simulation_app, cli_args, logger = launch_isaac_sim()
@@ -88,7 +78,6 @@ def get_env():
     )
 
     import isaaclab_tasks
-    from isaaclab_tasks.utils import get_checkpoint_path 
     from isaaclab_tasks.utils.hydra import hydra_task_config
 
     torch.backends.cuda.matmul.allow_tf32 = True
@@ -96,20 +85,16 @@ def get_env():
     torch.backends.cudnn.deterministic = False
     torch.backends.cudnn.benchmark = False
 
-    env_cfg = register_task_to_hydra(cli_args.task.split(":")[-1])
-
-    """Train with RSL-RL agent."""
-    ### override configurations with non-hydra CLI arguments
-    # agent_cfg = cli_args.update_rsl_rl_cfg(agent_cfg, cli_args)
-    # agent_cfg.max_iterations = (
-    #     cli_args.max_iterations if cli_args.max_iterations is not None else agent_cfg.max_iterations
-    # )
+    from isaaclab_tasks.utils.parse_cfg import load_cfg_from_registry
+    from isaaclab.envs.utils.spaces import replace_env_cfg_spaces_with_strings
+    
+    env_cfg = load_cfg_from_registry(cli_args.task.split(":")[-1], "env_cfg_entry_point")
+    env_cfg = replace_env_cfg_spaces_with_strings(env_cfg)
     env_cfg.scene.num_envs = cli_args.num_envs if cli_args.num_envs is not None else env_cfg.scene.num_envs
 
     ### set the environment seed
     ### note: certain randomizations occur in the environment initialization so we set the seed here
-    # env_cfg.seed = agent_cfg.seed
-    env_cfg.seed = 42
+    env_cfg.seed = cli_args.seed
     env_cfg.sim.device = cli_args.device if cli_args.device is not None else env_cfg.sim.device
 
     ### multi-gpu training configuration
@@ -149,16 +134,14 @@ def get_env():
     dump_yaml(os.path.join(cli_args.log_dir, "params", "env.yaml"), env_cfg)
     dump_pickle(os.path.join(cli_args.log_dir, "params", "env.pkl"), env_cfg)
 
-    return simulation_app, env
+    return simulation_app, app_launcher, env, cli_args
 
 
 if __name__ == '__main__':
 
-    simulation_app, env = get_env()
+    simulation_app, app_launcher, env, cli_args = get_env()
     
     print(env)
-    
-    
     env.close()
 
     simulation_app.close()
