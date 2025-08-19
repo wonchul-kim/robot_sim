@@ -17,7 +17,7 @@ from isaaclab.utils.assets import ISAACLAB_NUCLEUS_DIR
 # FILE = Path(__file__).resolve()
 # ROOT = FILE.parent
 
-DOOSAN_M1013_CFG = ArticulationCfg(
+M1013_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
         usd_path=f"/HDD/_projects/github/robot/data/descriptions/doosan/m1013.usd",
         activate_contact_sensors=False,
@@ -33,7 +33,12 @@ DOOSAN_M1013_CFG = ArticulationCfg(
         # collision_props=sim_utils.CollisionPropertiesCfg(contact_offset=0.005, rest_offset=0.0),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        joint_pos={'joint_1': 0.0, 'joint_2': 0.0, 'joint_3': 0.0, 'joint_4': 0.0, 'joint_5': 0.0, 'joint_6': 0.0},
+        joint_pos={'joint_1': 0.0, 
+                   'joint_2': 0.0,
+                   'joint_3': 0.0,
+                   'joint_4': 0.0,
+                   'joint_5': 0.0,
+                   'joint_6': 0.0},
     ),
     actuators={
         "m1013_group1": ImplicitActuatorCfg(
@@ -55,12 +60,12 @@ DOOSAN_M1013_CFG = ArticulationCfg(
 """Configuration of Franka Emika Panda robot."""
 
 
-DOOSAN_M1013_HIGH_PD_CFG = DOOSAN_M1013_CFG.copy()
-DOOSAN_M1013_HIGH_PD_CFG.spawn.rigid_props.disable_gravity = True
-DOOSAN_M1013_HIGH_PD_CFG.actuators["m1013_group1"].stiffness = 400.0
-DOOSAN_M1013_HIGH_PD_CFG.actuators["m1013_group1"].damping = 80.0
-DOOSAN_M1013_HIGH_PD_CFG.actuators["m1013_group2"].stiffness = 400.0
-DOOSAN_M1013_HIGH_PD_CFG.actuators["m1013_group2"].damping = 80.0
+M1013_HIGH_PD_CFG = M1013_CFG.copy()
+M1013_HIGH_PD_CFG.spawn.rigid_props.disable_gravity = True
+M1013_HIGH_PD_CFG.actuators["m1013_group1"].stiffness = 400.0
+M1013_HIGH_PD_CFG.actuators["m1013_group1"].damping = 80.0
+M1013_HIGH_PD_CFG.actuators["m1013_group2"].stiffness = 400.0
+M1013_HIGH_PD_CFG.actuators["m1013_group2"].damping = 80.0
 
 """Configuration of Franka Emika Panda robot with stiffer PD control.
 

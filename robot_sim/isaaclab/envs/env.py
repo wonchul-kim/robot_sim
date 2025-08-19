@@ -4,12 +4,13 @@ def get_args():
     parser = argparse.ArgumentParser(description='')
     parser.add_argument("--output_dir", default='/HDD/etc/outputs/isaac', type=str)
     parser.add_argument("--device", default='cuda:1', type=str)
-    parser.add_argument("--gui", action="store_true", default=False)
+    parser.add_argument("--gui", action="store_true", default=True)
     parser.add_argument("--video", action="store_true", default=True, help="Record videos during training")
     parser.add_argument("--video_length", type=int, default=200, help="Length of the recorded video (in steps).")
     parser.add_argument("--video_interval", type=int, default=20000, help="Interval between video recordings (in steps).")
     parser.add_argument("--num_envs", type=int, default=2, help="Number of environments to simulate.")
-    parser.add_argument("--task", type=str, default='Isaac-Reach-Franka-v0', help="Name of the task.")
+    # parser.add_argument("--task", type=str, default='Isaac-Reach-Franka-v0', help="Name of the task.")
+    parser.add_argument("--task", type=str, default='Isaac-Reach-M1013-v0', help="Name of the task.")
     parser.add_argument("--seed", type=int, default=42, help="Seed used for the environment")
     parser.add_argument("--max_iterations", type=int, default=1e6, help="RL Policy training iterations.")
     parser.add_argument(
@@ -35,8 +36,9 @@ def launch_isaac_sim():
                         rendering_mode=None, kit_args='')
     '''
     if cli_args.gui:
+        cli_args.headless = False
+    else:
         cli_args.headless = True
-    cli_args.headless = True
     if cli_args.video:
         cli_args.enable_cameras = True
     
@@ -87,6 +89,7 @@ def get_env():
 
     from isaaclab_tasks.utils.parse_cfg import load_cfg_from_registry
     from isaaclab.envs.utils.spaces import replace_env_cfg_spaces_with_strings
+    import robot_sim.isaaclab.assets.robots.doosan
     
     env_cfg = load_cfg_from_registry(cli_args.task.split(":")[-1], "env_cfg_entry_point")
     env_cfg = replace_env_cfg_spaces_with_strings(env_cfg)
