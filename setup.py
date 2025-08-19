@@ -34,6 +34,7 @@ else:
 
 
 setup(
+    name='robot_sim',
     version=get_version(),
     python_requires='>=3.9',
     description=('Template for Python Project'),
