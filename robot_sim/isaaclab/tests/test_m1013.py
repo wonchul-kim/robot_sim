@@ -43,6 +43,7 @@ sim.reset()
 
 # On reset: write default root & joint state, then reset buffers
 root_state = robot.data.default_root_state.clone()
+print("ROOT STATE: ", root_state)
 robot.write_root_pose_to_sim(root_state[:, :7])
 robot.write_root_velocity_to_sim(root_state[:, 7:])
 robot.write_joint_state_to_sim(robot.data.default_joint_pos, robot.data.default_joint_vel)
@@ -106,7 +107,7 @@ for i in range(steps): ###  ====================================================
         print("ang_w :", ee["ang_w"])
 
     # “움직이는지 확인” 용도로 매 스텝 joint state를 조금씩 덮어쓰기
-    robot.write_joint_state_to_sim(q_target, qd_target)
+    # robot.write_joint_state_to_sim(q_target, qd_target)
 
     # 한 스텝 진행
     sim.step()

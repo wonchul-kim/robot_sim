@@ -3,12 +3,12 @@ def get_args():
     
     parser = argparse.ArgumentParser(description='')
     parser.add_argument("--output_dir", default='/HDD/etc/outputs/isaac', type=str)
-    parser.add_argument("--device", default='cuda:1', type=str)
+    parser.add_argument("--device", default='cuda:3', type=str)
     parser.add_argument("--gui", action="store_true", default=False)
     parser.add_argument("--video", action="store_true", default=True, help="Record videos during training")
     parser.add_argument("--video_length", type=int, default=200, help="Length of the recorded video (in steps).")
     parser.add_argument("--video_interval", type=int, default=20000, help="Interval between video recordings (in steps).")
-    parser.add_argument("--num_envs", type=int, default=4, help="Number of environments to simulate.")
+    parser.add_argument("--num_envs", type=int, default=128, help="Number of environments to simulate.")
     # parser.add_argument("--task", type=str, default='Isaac-Reach-Franka-v0', help="Name of the task.")
     parser.add_argument("--task", type=str, default='Isaac-Reach-M1013-v0', help="Name of the task.")
     parser.add_argument("--seed", type=int, default=42, help="Seed used for the environment")
@@ -80,7 +80,6 @@ def get_env():
     )
 
     import isaaclab_tasks
-    from isaaclab_tasks.utils.hydra import hydra_task_config
 
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
