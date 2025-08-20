@@ -57,12 +57,12 @@ M1013_CFG = ArticulationCfg(
 )
 
 
-# M1013_HIGH_PD_CFG = M1013_CFG.copy()
-# M1013_HIGH_PD_CFG.spawn.rigid_props.disable_gravity = True
-# M1013_HIGH_PD_CFG.actuators["m1013_group1"].stiffness = 400.0
-# M1013_HIGH_PD_CFG.actuators["m1013_group1"].damping = 80.0
-# M1013_HIGH_PD_CFG.actuators["m1013_group2"].stiffness = 400.0
-# M1013_HIGH_PD_CFG.actuators["m1013_group2"].damping = 80.0
+M1013_HIGH_PD_CFG = M1013_CFG.copy()
+M1013_HIGH_PD_CFG.spawn.rigid_props.disable_gravity = True
+M1013_HIGH_PD_CFG.actuators["m1013_group1"].stiffness = 400.0
+M1013_HIGH_PD_CFG.actuators["m1013_group1"].damping = 80.0
+M1013_HIGH_PD_CFG.actuators["m1013_group2"].stiffness = 400.0
+M1013_HIGH_PD_CFG.actuators["m1013_group2"].damping = 80.0
 
 # """Configuration of Franka Emika Panda robot with stiffer PD control.
 
