@@ -28,6 +28,8 @@ prim_utils.create_prim("/World/Origin", "Xform", translation=(0.0, 0.0, 0.0))
 
 ### 3. Define robot =====================================================================
 from robot_sim.isaaclab.assets.robots.doosan.m1013_cfg import M1013_CFG
+from robot_sim.isaaclab.assets.robots.franka.franka import FRANKA_PANDA_CFG
+from robot_sim.isaaclab.assets.robots.ur.ur10 import UR10_CFG
 
 cfg = M1013_CFG.copy()
 cfg.prim_path = "/World/Origin/Robot"
@@ -82,10 +84,13 @@ freq = 0.2  # Hz
 dt = sim.get_physics_dt() if hasattr(sim, "get_physics_dt") else 1.0/60.0
 t = 0.0
 
+import numpy as np
 from robot_sim.isaaclab.utils.articulations import get_ee_state_world
 
+trajectory = {'joint_position': [], 'joint_velocity': [], 'ee_pos_w': [], 'ee_quat_w_xyzw': [], 'ee_lin_w': [], 'ee_ang_w': []}
+
 sim.play()
-steps = 2000  # 약 20초 @60Hz
+steps = 500  # 약 5초 @60Hz
 for i in range(steps): ###  =====================================================================
     t += dt 
     # 목표 각도(부드럽게 왔다갔다)
@@ -94,23 +99,34 @@ for i in range(steps): ###  ====================================================
 
     ee = get_ee_state_world(robot, ee_name="tool0", env_idx=0, to_numpy=True)
 
+    trajectory['joint_position'].append(robot.data.joint_pos.cpu().detach().numpy().tolist()[0])
+    trajectory['joint_velocity'].append(robot.data.joint_vel.cpu().detach().numpy().tolist()[0])
+    trajectory['ee_pos_w'].append(ee['pos_w'].tolist())
+    trajectory['ee_quat_w_xyzw'].append(ee['quat_w_xyzw'].tolist())
+    trajectory['ee_lin_w'].append(ee['lin_w'].tolist())
+    trajectory['ee_ang_w'].append(ee['ang_w'].tolist())
+    
     if i%200 == 0:
         print(f'q_target: {q_target}')
         print(f'robot.data.joint_pos: {robot.data.joint_pos}')
         print(f'robot.data.joint_vel: {robot.data.joint_vel}')
 
-        # 사용 예:
-        print("[EE] index:", ee["index"], "name_field:", ee["name_field"], "tensors:", ee["tensor_fields"])
+        # # 사용 예:
+        # print("[EE] index:", ee["index"], "name_field:", ee["name_field"], "tensors:", ee["tensor_fields"])
         print("pos_w :", ee["pos_w"])
-        print("quat_w:", ee["quat_w"])
+        print("quat_w:", ee["quat_w_xyzw"])
         print("lin_w :", ee["lin_w"])
         print("ang_w :", ee["ang_w"])
 
     # “움직이는지 확인” 용도로 매 스텝 joint state를 조금씩 덮어쓰기
-    # robot.write_joint_state_to_sim(q_target, qd_target)
+    robot.write_joint_state_to_sim(q_target, qd_target)
 
     # 한 스텝 진행
     sim.step()
+    
+import pandas as pd 
+df = pd.DataFrame(trajectory)
+df.to_csv('/HDD/etc/outputs/isaac/trajectory.csv')
 
 # 종료 정리
 sim.stop()

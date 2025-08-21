@@ -43,17 +43,17 @@ M1013_CFG = ArticulationCfg(
         "m1013_group1": ImplicitActuatorCfg(
             joint_names_expr=['joint_1', 'joint_2', 'joint_3'],
             effort_limit_sim=30.000,
-            stiffness=400.0,
-            damping=80.0,
+            stiffness=800.0,
+            damping=40.0,
         ),
         "m1013_group2": ImplicitActuatorCfg(
             joint_names_expr=['joint_4', 'joint_5', 'joint_6'],
             effort_limit_sim=30.000,
-            stiffness=400.0,
-            damping=80.0,
+            stiffness=800.0,
+            damping=40.0,
         ),
     },
-    soft_joint_pos_limit_factor=1.0,
+    # soft_joint_pos_limit_factor=1.0,
 )
 
 
