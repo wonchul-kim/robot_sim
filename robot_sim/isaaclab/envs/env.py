@@ -9,8 +9,8 @@ def get_args():
     parser.add_argument("--video_length", type=int, default=200, help="Length of the recorded video (in steps).")
     parser.add_argument("--video_interval", type=int, default=20000, help="Interval between video recordings (in steps).")
     parser.add_argument("--num_envs", type=int, default=128, help="Number of environments to simulate.")
-    # parser.add_argument("--task", type=str, default='Isaac-Reach-Franka-v0', help="Name of the task.")
-    parser.add_argument("--task", type=str, default='Isaac-Reach-M1013-v0', help="Name of the task.")
+    parser.add_argument("--task", type=str, default='Isaac-Reach-Franka-v0', help="Name of the task.")
+    # parser.add_argument("--task", type=str, default='Isaac-Reach-M1013-v0', help="Name of the task.")
     parser.add_argument("--seed", type=int, default=42, help="Seed used for the environment")
     parser.add_argument("--max_iterations", type=int, default=1e6, help="RL Policy training iterations.")
     parser.add_argument(
