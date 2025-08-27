@@ -41,28 +41,34 @@ M1013_CFG = ArticulationCfg(
     ),
     actuators={
         "m1013_group1": ImplicitActuatorCfg(
-            joint_names_expr=['joint_1', 'joint_2', 'joint_3'],
-            effort_limit_sim=30.000,
-            stiffness=80.0,
-            damping=40.0,
+            joint_names_expr=['joint_1', 'joint_2'],
+            effort_limit_sim=20400,
+            stiffness=566.6667,
+            damping=56.6667,
         ),
         "m1013_group2": ImplicitActuatorCfg(
+            joint_names_expr=['joint_3'],
+            effort_limit_sim=9600,
+            stiffness=266.6667,
+            damping=26.6667,
+        ),
+        "m1013_group3": ImplicitActuatorCfg(
             joint_names_expr=['joint_4', 'joint_5', 'joint_6'],
-            effort_limit_sim=30.000,
-            stiffness=80.0,
-            damping=40.0,
+            effort_limit_sim=2700,
+            stiffness=75,
+            damping=7.5,
         ),
     },
     # soft_joint_pos_limit_factor=1.0,
 )
 
 
-M1013_HIGH_PD_CFG = M1013_CFG.copy()
-M1013_HIGH_PD_CFG.spawn.rigid_props.disable_gravity = True
-M1013_HIGH_PD_CFG.actuators["m1013_group1"].stiffness = 400.0
-M1013_HIGH_PD_CFG.actuators["m1013_group1"].damping = 80.0
-M1013_HIGH_PD_CFG.actuators["m1013_group2"].stiffness = 400.0
-M1013_HIGH_PD_CFG.actuators["m1013_group2"].damping = 80.0
+# M1013_HIGH_PD_CFG = M1013_CFG.copy()
+# M1013_HIGH_PD_CFG.spawn.rigid_props.disable_gravity = True
+# M1013_HIGH_PD_CFG.actuators["m1013_group1"].stiffness = 400.0
+# M1013_HIGH_PD_CFG.actuators["m1013_group1"].damping = 80.0
+# M1013_HIGH_PD_CFG.actuators["m1013_group2"].stiffness = 400.0
+# M1013_HIGH_PD_CFG.actuators["m1013_group2"].damping = 80.0
 
 # """Configuration of Franka Emika Panda robot with stiffer PD control.
 
