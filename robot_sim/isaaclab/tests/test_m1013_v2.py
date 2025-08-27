@@ -72,13 +72,10 @@ print('root_quat_w: ', robot.data.root_quat_w)     # [N, 4]  월드 좌표계에
 print('root_lin_vel_w: ', robot.data.root_lin_vel_w)  # [N, 3]  월드 좌표계 선속도
 print('root_ang_vel_w: ', robot.data.root_ang_vel_w)  # [N, 3]  월드 좌표계 각속도
     
-# 시작 각도: cfg.init_state에 준 값으로 시작
 q0 = robot.data.default_joint_pos.clone().cpu().detach()  # shape: [1, num_joints]
 print(f'Current Joint Pos: {robot.data.joint_pos}')
 qd0 = torch.zeros_like(q0)
 
-# 간단한 사인 궤적을 3축(혹은 모든 축)에 줘서 움직임 확인
-# 각도 범위가 불명확하니 작은 진폭(라디안)으로만 테스트
 amp = torch.tensor([[0.2]*num_joints])  # 0.2rad ≈ 11.5deg
 freq = 0.2  # Hz
 dt = sim.get_physics_dt() if hasattr(sim, "get_physics_dt") else 1.0/60.0
@@ -87,46 +84,16 @@ t = 0.0
 import numpy as np
 from robot_sim.isaaclab.utils.articulations import get_ee_state_world
 
-trajectory = {'joint_position': [], 'joint_velocity': [], 'ee_pos_w': [], 'ee_quat_w_xyzw': [], 'ee_lin_w': [], 'ee_ang_w': []}
-
 sim.play()
-steps = 500  # 약 5초 @60Hz
-for i in range(steps): ###  =====================================================================
+steps = 500
+for i in range(steps):
     t += dt 
-    # 목표 각도(부드럽게 왔다갔다)
-    q_target = q0 + amp * torch.sin(torch.tensor([[2*math.pi*freq*t]]))  # [1, dof]
+    q_target = q0 + amp * torch.sin(torch.tensor([[2*math.pi*freq*t]])) 
     qd_target = torch.zeros_like(q_target)
 
     ee = get_ee_state_world(robot, ee_name="tool0", env_idx=0, to_numpy=True)
-
-    trajectory['joint_position'].append(robot.data.joint_pos.cpu().detach().numpy().tolist()[0])
-    trajectory['joint_velocity'].append(robot.data.joint_vel.cpu().detach().numpy().tolist()[0])
-    trajectory['ee_pos_w'].append(ee['pos_w'].tolist())
-    trajectory['ee_quat_w_xyzw'].append(ee['quat_w_xyzw'].tolist())
-    trajectory['ee_lin_w'].append(ee['lin_w'].tolist())
-    trajectory['ee_ang_w'].append(ee['ang_w'].tolist())
-    
-    if i%200 == 0:
-        print(f'q_target: {q_target}')
-        print(f'robot.data.joint_pos: {robot.data.joint_pos}')
-        print(f'robot.data.joint_vel: {robot.data.joint_vel}')
-
-        # # 사용 예:
-        # print("[EE] index:", ee["index"], "name_field:", ee["name_field"], "tensors:", ee["tensor_fields"])
-        print("pos_w :", ee["pos_w"])
-        print("quat_w:", ee["quat_w_xyzw"])
-        print("lin_w :", ee["lin_w"])
-        print("ang_w :", ee["ang_w"])
-
-    # “움직이는지 확인” 용도로 매 스텝 joint state를 조금씩 덮어쓰기
     robot.write_joint_state_to_sim(q_target, qd_target)
 
-    # 한 스텝 진행
     sim.step()
     
-import pandas as pd 
-df = pd.DataFrame(trajectory)
-df.to_csv('/HDD/etc/outputs/isaac/trajectory.csv')
-
-# 종료 정리
 sim.stop()
