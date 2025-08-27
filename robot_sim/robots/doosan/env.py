@@ -16,9 +16,11 @@ class M1013Env(gym.Env):
         self.init_ee_position = [0.4676724374294281, 0.03708246722817421, 0.7366037368774414]
         self.curr_ee_position = self.init_ee_position
         self.current_step = 1
-        self.reward_type = 'sparse'
+        self.reward_type = 'dense'
         self.goal_threshold = 0.02
-        self.target_range = 0.3
+        self.target_range = 0.5
+        self.action_scale = 0.05
+        self.max_steps_per_episode = 100
 
         self.observation_space = gym.spaces.Dict(
             {
@@ -100,7 +102,7 @@ class M1013Env(gym.Env):
         # Map the discrete action (0-3) to a movement direction
         
         assert len(action) == self.action_space.shape[0]
-        self.curr_joint_position += action 
+        self.curr_joint_position += action*self.action_scale
         self.curr_ee_position = self.k.fk(self.curr_joint_position)
 
         observation = self._get_obs()
@@ -114,7 +116,7 @@ class M1013Env(gym.Env):
             info.update({"is_success": False})
             
         truncated = False
-        if self.current_step >= 50:
+        if self.current_step >= self.max_steps_per_episode:
             truncated = True 
         self.current_step += 1
         

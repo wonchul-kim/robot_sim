@@ -15,9 +15,11 @@ class M1013EnvV2(gym.Env):
         self.curr_ee_position = self.init_ee_position
         self.current_step = 1
         self.reward_type = 'dense'
-        self.target_range = 0.3
+        self.target_range = 0.5
         self.goal_threshold = 0.02
-
+        self.action_scale = 0.05
+        self.max_steps_per_episode = 100
+        
         self.observation_space = gym.spaces.Dict(
             {
                 "achieved_goal": gym.spaces.Box(-np.inf, np.inf, shape=(3,), dtype=float), 
@@ -85,7 +87,7 @@ class M1013EnvV2(gym.Env):
         # Map the discrete action (0-3) to a movement direction
         
         assert len(action) == self.action_space.shape[0]
-        self.curr_ee_position += action*0.05
+        self.curr_ee_position += action*self.action_scale
         target = np.vstack([np.hstack([np.eye(3), self.curr_ee_position.reshape(-1, 1)]), [0, 0, 0, 1]])
         self.curr_joint_position = self.k.ik_frame(target=target, 
                                                    initial_position=np.concatenate(([0], self.curr_joint_position, [0])))
@@ -101,7 +103,7 @@ class M1013EnvV2(gym.Env):
             info.update({"is_success": False})
             
         truncated = False
-        if self.current_step >= 50:
+        if self.current_step >= self.max_steps_per_episode:
             truncated = True 
         self.current_step += 1
         
