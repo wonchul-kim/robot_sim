@@ -28,8 +28,6 @@ prim_utils.create_prim("/World/Origin", "Xform", translation=(0.0, 0.0, 0.0))
 
 ### 3. Define robot =====================================================================
 from robot_sim.isaaclab.assets.robots.doosan.m1013_2f140_cfg import M1013_2F140_CFG
-from robot_sim.isaaclab.assets.robots.franka.franka import FRANKA_PANDA_CFG
-from robot_sim.isaaclab.assets.robots.ur.ur10 import UR10_CFG
 
 cfg = M1013_2F140_CFG.copy()
 cfg.prim_path = "/World/Origin/Robot"
