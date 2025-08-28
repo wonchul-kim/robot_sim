@@ -60,11 +60,11 @@ print(robot.data.joint_pos.shape)   # [num_envs, num_dofs]
 
 print("== Link  names ==")
 import omni.usd
+from pxr import UsdPhysics
 stage = omni.usd.get_context().get_stage()
 for prim in stage.Traverse():
     if prim.IsA(omni.usd.UsdGeom.Xform):  # 또는 UsdGeom.Mesh
-        print(prim.GetPath().pathString)
-
+        print(prim.GetPath().pathString, prim.HasAPI(UsdPhysics.RigidBodyAPI))
 
 # Base Coordinates
 print('root_pos_w: ', robot.data.root_pos_w)      # [N, 3]  월드 좌표계에서 베이스 위치

@@ -25,10 +25,26 @@ class M1013ReachEnvCfg(ReachEnvCfg):
         self.rewards.end_effector_orientation_tracking.params["asset_cfg"].body_names = ["tool0"]
         # override actions
         self.actions.arm_action = mdp.JointPositionActionCfg(
-            asset_name="robot", joint_names=[".*"], scale=0.5, use_default_offset=True
+            asset_name="robot",             
+            joint_names=["joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"],
+            scale=0.5, use_default_offset=True
         )
         # override command generator body
         # end-effector is along x-direction
         self.commands.ee_pose.body_name = "tool0"
         self.commands.ee_pose.ranges.pitch = (math.pi / 2, math.pi / 2)
 
+'''
+frames
+[None, 'end_effector']
+frame_prim_paths
+['/World/envs/env_.*/Robot/panda_link0', '/World/envs/env_.*/Robot/panda_hand']
+['/World/envs/env_.*/Robot/hande_gripper', '/World/envs/env_.*/Robot/hande_gripper']
+frame_offsets
+[None, OffsetCfg(pos=[0.0, 0.0, 0.1034], rot=(1.0, 0.0, 0.0, 0.0))]
+frame_types
+['source', 'target']
+
+tokens
+['^World$', '^envs$', '^env_.*$']
+'''
