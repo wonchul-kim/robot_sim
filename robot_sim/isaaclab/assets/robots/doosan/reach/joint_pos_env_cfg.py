@@ -5,9 +5,7 @@ from isaaclab.utils import configclass
 import isaaclab_tasks.manager_based.manipulation.reach.mdp as mdp
 from isaaclab_tasks.manager_based.manipulation.reach.reach_env_cfg import ReachEnvCfg
 
-from .m1013_cfg import M1013_CFG
-
-
+from robot_sim.isaaclab.assets.robots.doosan.m1013_cfg import M1013_CFG
 
 @configclass
 class M1013ReachEnvCfg(ReachEnvCfg):
@@ -33,3 +31,4 @@ class M1013ReachEnvCfg(ReachEnvCfg):
         # end-effector is along x-direction
         self.commands.ee_pose.body_name = "tool0"
         self.commands.ee_pose.ranges.pitch = (math.pi / 2, math.pi / 2)
+
