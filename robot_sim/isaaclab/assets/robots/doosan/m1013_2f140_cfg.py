@@ -65,10 +65,9 @@ M1013_2F140_CFG = ArticulationCfg(
                 "robotiq_hande_left_finger_joint",
                 "robotiq_hande_right_finger_joint",
             ],
-            # Isaac 내부 단위가 N (prismatic)로 매핑되므로 아래를 적당히 보수적으로 설정
-            effort_limit_sim=1300.0,
-            stiffness=3000.0,   # m-DOF라 회전보다 큰 값이 자연스러움
-            damping=50.0,
+            effort_limit_sim=200.0,
+            stiffness=300.0,   
+            damping=10.0,
         ),
     },
     # soft_joint_pos_limit_factor=1.0,
