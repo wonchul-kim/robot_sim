@@ -68,7 +68,7 @@ M1013_2F140_CFG = ArticulationCfg(
             velocity_limit_sim=10.0,
             effort_limit_sim=100.0,
             stiffness=50.0,   
-            damping=10.0,
+            damping=5.0,
         ),
     },
     soft_joint_pos_limit_factor=1.0,

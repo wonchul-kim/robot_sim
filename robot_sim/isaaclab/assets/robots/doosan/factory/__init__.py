@@ -1,7 +1,7 @@
 import gymnasium as gym
 
 from . import agents
-from isaaclab_tasks.direct.factory.factory_env import FactoryEnv
+from .factory_env import FactoryEnv
 from .factory_env_cfg import FactoryTaskGearMeshCfg, FactoryTaskNutThreadCfg, FactoryTaskPegInsertCfg
 
 
