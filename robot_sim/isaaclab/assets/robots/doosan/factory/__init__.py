@@ -7,7 +7,7 @@ from .factory_env_cfg import FactoryTaskGearMeshCfg, FactoryTaskNutThreadCfg, Fa
 
 gym.register(
     id="Isaac-Factory-PegInsert-Direct-M1013-2F140-v0",
-    entry_point="isaaclab_tasks.direct.factory:FactoryEnv",
+    entry_point="robot_sim.isaaclab.assets.robots.doosan.factory:FactoryEnv",
     disable_env_checker=True,
     kwargs={
         "env_cfg_entry_point": FactoryTaskPegInsertCfg,
