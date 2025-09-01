@@ -38,8 +38,8 @@ M1013_2F140_CFG = ArticulationCfg(
                    'joint_4': 0.0,
                    'joint_5': math.radians(90.0),
                    'joint_6': 0.0,
-                   'robotiq_hande_left_finger_joint': 0.01,
-                   'robotiq_hande_right_finger_joint': 0.01},
+                   'robotiq_hande_left_finger_joint': 0.025,
+                   'robotiq_hande_right_finger_joint': 0.025},
     ),
     actuators={
         "m1013_group1": ImplicitActuatorCfg(
@@ -65,12 +65,13 @@ M1013_2F140_CFG = ArticulationCfg(
                 "robotiq_hande_left_finger_joint",
                 "robotiq_hande_right_finger_joint",
             ],
-            effort_limit_sim=200.0,
-            stiffness=300.0,   
+            velocity_limit_sim=10.0,
+            effort_limit_sim=100.0,
+            stiffness=50.0,   
             damping=10.0,
         ),
     },
-    # soft_joint_pos_limit_factor=1.0,
+    soft_joint_pos_limit_factor=1.0,
 )
 
 
