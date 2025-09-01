@@ -14,7 +14,7 @@ parser.add_argument("--video", action="store_true", default=True, help="Record v
 parser.add_argument("--video_length", type=int, default=200, help="Length of the recorded video (in steps).")
 parser.add_argument("--video_interval", type=int, default=2000, help="Interval between video recordings (in steps).")
 parser.add_argument("--num_envs", type=int, default=512, help="Number of environments to simulate.")
-parser.add_argument("--task", type=str, default='Isaac-Factory-PegInsert-Direct-M1013-2F140-v0', help="Name of the task.")
+parser.add_argument("--task", type=str, default='Isaac-Factory-PegInsert-Direct-v0', help="Name of the task.")
 parser.add_argument(
     "--agent", type=str, default="rl_games_cfg_entry_point", help="Name of the RL agent configuration entry point."
 )

@@ -1,6 +1,7 @@
 from .reach import *
 from .lift import *
 from .cabinet import *
+from .factory import *
 
 '''
 == Link names & is_rigid == 
